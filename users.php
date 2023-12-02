@@ -3,7 +3,7 @@ session_start();
 
 include('connection.php');
 
-if($_SESSION["user_type"] != "admine"){
+if($_SESSION["user_type"] != "admin"){
     header("Location: profile.php");
     exit();
 }
@@ -11,7 +11,10 @@ if($_SESSION["user_type"] != "admine"){
 if (isset($_POST['submit'])) {
     $id_delete = $_POST['id_delete'];
 
-    $delete_query = "DELETE FROM user WHERE user_id = $id_delete";
+
+
+    $timestamp = date('Y-m-d H:i:s');
+    $delete_query = "UPDATE user SET deleted_at = '$timestamp' WHERE user_id = $id_delete";
     $delete_result = mysqli_query($conn, $delete_query);
 }
 ?>
@@ -34,7 +37,7 @@ if (isset($_POST['submit'])) {
         <?php
 
         // Fetch the information of all users
-        $sql = "SELECT * FROM user";
+        $sql = "SELECT * FROM user WHERE deleted_at IS NULL";
         $result = mysqli_query($conn, $sql);
 
         // Loop through the result and display each user
